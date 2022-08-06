@@ -3,10 +3,10 @@
     //fopen() -> abrir/Criar
     //fwrite() -> escrever no arquivo
     //fclose() -> fechar o arquivo
-    //feof() ->Durante a leitura avisa q
-    //fgets() -> Pega uma linha do arquivo
-    //file_put_contents() -> Cria arquivo
-    //file_get_contents() -> Pega todo
+    //feof() ->Durante a leitura avisa que chegou ao final
+    //fgets() -> Pega uma linha do arquivo até o máximo de 1024bytes.
+    //file_put_contents() -> Cria arquivo/sobrescreve
+    //file_get_contents() -> Pega todo conteúdo de uma string
     //unlink() -> Deleta um arquivo
     //copy() -> Copiar arquivo
 
@@ -33,8 +33,32 @@
 
     $arquivo = fopen($pasta.$nome_arquivo,'a+');//Adicionando um arquivo dentro da pasta criada anteriormente com o mkdir
     //'a+'	Abre para leitura e escrita; coloca o ponteiro do arquivo no final do arquivo. Se o arquivo não existir, tenta criá-lo.
-    fwrite($arquivo, 'Um linha injetada pelo PHP'.PHP_EOL);//função para escrever no arquvo passado como parâmetro e o PHP_EOL serve para pular uma linha
-    fwrite($arquivo, 'Um linha 2 injetada pelo PHP'.PHP_EOL);
-    fwrite($arquivo, 'Um linha 3 injetada pelo PHP'.PHP_EOL);
-    fclose($arquivo)//É sempre necessário fechar um arquivo após trabalhar com ele ou nele.
+    fwrite($arquivo, 'Primeira linha injetada pelo PHP'.PHP_EOL);//função para escrever no arquvo passado como parâmetro e o PHP_EOL serve para pular uma linha
+    fwrite($arquivo, 'Segunda linha injetada pelo PHP'.PHP_EOL);
+    fwrite($arquivo, 'Terceira linha injetada pelo PHP'.PHP_EOL);
+    fclose($arquivo);//É sempre necessário fechar um arquivo após trabalhar com ele ou nele.
+
+    $caminhoArquivo = $pasta.$nome_arquivo;//Atribuindo o caminho da pasta à uma variável
+
+    if(file_exists($caminhoArquivo)&&is_file($caminhoArquivo)){//file_exists verifica se o arquivo existe e is_file verifica se é um arquivo.
+        $abrirArquivo = fopen($caminhoArquivo, 'r');//fopen abre um arquivo e o arumento 'r' diz que é somente para leitura
+        while(!feof($abrirArquivo)){//feof passa true quando chega ao final de um arquivo, entã a negação diz que enquanto ele não chegar ao final do arquivo é pra executar o laço while.
+            echo fgets($abrirArquivo)."<br>";//fgets seleciona uma linha do arquivo até no máximo 1024 bytes.
+            //echo file_get_contets($caminhoArquivo) Exibe todo o conteúdo do arquivo como se fosse uma única string
+        }
+        fclose($abrirArquivo);
+    }
+    if(is_dir($pasta)){
+        //print_r(scandir($pasta));print_r — Imprime informação sobre uma variável de forma legível
+        //scandir exibe os arquivos dentro de um diretório 
+        foreach(scandir($pasta) as $arquivo){//percorre a pasta e dá nome de "arquivo" ao conteúdo.
+            $caminho = $pasta.$arquivo; //Variável que contém o caminho da pasta mais o nome do arquivo que está dentro da pasta
+            if(is_file($caminho)){//verifica se realmente é um arquivo
+                unlink($caminho);//apaga o arquivo
+            }
+        }
+        rmdir($pasta);//deleta a pasta após deletar todo o conteúdo da mesma
+        copy('index.php', 'copia.php');//Cria uma cópia do arquivo passado no primeiro parâmentro, nomeando-o com o segundo parâmetro
+        unlink('copia.php');
+    }
     ?>

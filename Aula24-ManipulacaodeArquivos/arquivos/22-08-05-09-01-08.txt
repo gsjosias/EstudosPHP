@@ -1,3 +1,0 @@
-Um linha injetada pelo PHP
-Um linha 2 injetada pelo PHP
-Um linha 3 injetada pelo PHP
