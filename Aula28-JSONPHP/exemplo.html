@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+    <script>
+        $.getJSON('https://viacep.com.br/ws/01001000/json/',
+        function(dados){
+            enviaParaPHP(dados);
+        });
+
+        function enviaParaPHP(dados){
+            var json = JSON.stringify(dados);
+            $.ajax({
+                url:'index.php',
+                data: { texto: json },
+                type: 'POST',
+                success: function(retorno){
+                    var objeto = JSON.parse(retorno);
+                    console.log(objeto.Linguagem);
+                },
+                error: function(erro){
+                    alert('Houve um erro');
+                }
+            })
+        }
+    </script>
+    
+</body>
+</html>
